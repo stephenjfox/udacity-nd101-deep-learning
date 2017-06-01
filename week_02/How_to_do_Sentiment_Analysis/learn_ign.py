@@ -1,43 +1,37 @@
-import pandas as pd
+import tflearn
+from tflearn.data_utils import load_csv, to_categorical
 
-# Easy is to map a review to simply "positive" or "negative"
-# Hard maps the reviews to their full descriptions:
-# learned more about the data set: "Masterpiece", "Unbearable", "Disaster", "Okay" are also rating phrases
-# Masterpiece, Amazing, Great, Good, Okay, Mediocre, Awful, Painful, Unbearable, Disaster
+# might need (..., categorical_labels=True, n_classes=11)
+data, labels = load_csv('data_scaled.fix.csv', target_column=0)
 
-difficulty = { 'easy': { 'output_nodes': 2 }, 'hard': { 'output_nodes': 10 } }
+total_records = (len(data) + len(labels)) // 2 # incase things got funny - will have to compensate later
 
-# Data Preparation
-## 0. Read data
-## 1. Clean data (i.e. remove redundancies)
-df = pd.read_csv('cleaned_ign_reviews.csv')
+# Training on 70% of the data
+training_size = int(0.7 * total_records)
+validation_portion = 0.1 # will use later
 
+# Split our data into proportional chunks
+trainX, trainY = data[:training_size], labels[training_size:]
+testX, testY = data[:training_size], labels[training_size:]
 
-## 2. Transform
-### * -> Numeric
+# convert to one-hot?
+trainY = to_categorical(trainY, nb_classes=11)
+testY = to_categorical(testY, nb_classes=11)
 
-print(df[:10])
-### Normalize
+# The Network
 
+# as many inputs as there are columns... I don't know how to pick this..
+number_of_inputs = len(trainX[0])
 
-## 3. Reduction
-### Dimensionality Reduction
-### Feature Extraction
+net = tflearn.input_data([None, number_of_inputs])
+net = tflearn.embedding(net, input_dim=number_of_inputs**2, output_dim=128)
+net = tflearn.lstm(net, 128, dropout=0.8)
+net = tflearn.fully_connected(net, 11, activation='softmax')
+net = tflearn.regression(net, optimizer='adam', learning_rate=0.01,
+                        loss='categorical_crossentropy')
 
+model = tflearn.DNN(net)
+model.fit(trainX, trainY, validation_set=(testX, testY), show_metric=True,
+            batch_size=48)
 
 # Load into TFLearn model: http://tflearn.org/data_utils/#load_csv
-# TODO: After getting the data into numeric form I should do the following
-
-## Taken from the notebook on "your first neural network"
-## translate each category into multiple columns that are binary.
-## Then it will be all the easier for the network to work with it.
-
-# dummy_fields = ['season', 'weathersit', 'mnth', 'hr', 'weekday']
-# for each in dummy_fields:
-#     dummies = pd.get_dummies(rides[each], prefix=each, drop_first=False)
-#     rides = pd.concat([rides, dummies], axis=1)
-#
-# fields_to_drop = ['instant', 'dteday', 'season', 'weathersit',
-#                   'weekday', 'atemp', 'mnth', 'workingday', 'hr']
-# data = rides.drop(fields_to_drop, axis=1)
-# data.head()
