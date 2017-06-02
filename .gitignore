@@ -1,2 +1,3 @@
 .ipynb_checkpoints/**/**
 *.ipynb_checkpoints/
+week_02/intro-to-tflearn/mnist/
