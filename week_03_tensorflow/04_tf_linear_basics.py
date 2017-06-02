@@ -1,7 +1,6 @@
 # Solution is available in the other "quiz_solution.py" tab
 import tensorflow as tf
 
-## Just some thoughts
 ## If we're working with a reduced MNIST (of 0s, 1s, and 2s), there would only be 3 labels
 ## Because we would then review the squashed 28x28 -> 784, n_features = 784
 def get_weights(n_features, n_labels):
