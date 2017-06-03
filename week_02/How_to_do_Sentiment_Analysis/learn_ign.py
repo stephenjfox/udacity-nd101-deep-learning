@@ -11,8 +11,8 @@ training_size = int(0.7 * total_records)
 validation_portion = 0.1 # will use later
 
 # Split our data into proportional chunks
-trainX, trainY = data[:training_size], labels[training_size:]
-testX, testY = data[:training_size], labels[training_size:]
+trainX, testX = data[:training_size], data[training_size:]
+trainY, testY = labels[:training_size], labels[training_size:]
 
 # convert to one-hot?
 trainY = to_categorical(trainY, nb_classes=11)
