@@ -11,8 +11,8 @@ training_size = int(0.7 * total_records)
 validation_portion = 0.1 # will use later
 
 # Split our data into proportional chunks
-trainX, testX = data[:training_size], data[training_size:]
-trainY, testY = labels[:training_size], labels[training_size:]
+trainX, trainY = data[:training_size], labels[training_size:]
+testX, testY = data[:training_size], labels[training_size:]
 
 # convert to one-hot?
 trainY = to_categorical(trainY, nb_classes=11)
@@ -24,8 +24,8 @@ testY = to_categorical(testY, nb_classes=11)
 number_of_inputs = len(trainX[0])
 
 net = tflearn.input_data([None, number_of_inputs])
-net = tflearn.embedding(net, input_dim=number_of_inputs*number_of_inputs, output_dim=121)
-net = tflearn.lstm(net, 121, dropout=0.8)
+net = tflearn.embedding(net, input_dim=number_of_inputs**2, output_dim=128)
+net = tflearn.lstm(net, 128, dropout=0.8)
 net = tflearn.fully_connected(net, 11, activation='softmax')
 net = tflearn.regression(net, optimizer='adam', learning_rate=0.01,
                         loss='categorical_crossentropy')
@@ -35,3 +35,4 @@ model.fit(trainX, trainY, validation_set=(testX, testY), show_metric=True,
             batch_size=48)
 
 # Load into TFLearn model: http://tflearn.org/data_utils/#load_csv
+model.save('study_ign.tflearn')
