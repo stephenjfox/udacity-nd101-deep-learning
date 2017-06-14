@@ -23,6 +23,7 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 n_classes = 10  # MNIST total classes (0-9 digits)
 
 # Import MNIST data
+# TODO: use a data set you have access to
 mnist = input_data.read_data_sets('/datasets/ud730/mnist', one_hot=True)
 
 # The features are already scaled and the data is shuffled
@@ -57,7 +58,7 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 init = tf.global_variables_initializer()
 
 batch_size = 128
-epochs = 10
+epochs = 80
 learn_rate = 0.001
 
 train_batches = batches(batch_size, train_features, train_labels)
