@@ -11,7 +11,7 @@ n_input = 784  # MNIST data input (img shape: 28*28)
 n_classes = 10  # MNIST total classes (0-9 digits)
 
 # Import MNIST data
-mnist = input_data.read_data_sets('.', one_hot=True)
+mnist = input_data.read_data_sets('./MNIST_data', one_hot=True)
 
 # Features and Labels
 features = tf.placeholder(tf.float32, [None, n_input])
@@ -34,7 +34,8 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
 # Training phase
-import math
+from math import ceil
+from os.path import isfile
 
 save_file = './train_model.ckpt'
 batch_size = 128
@@ -45,10 +46,13 @@ saver = tf.train.Saver()
 # Launch the graph
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    
+
+    print("Restoring saved state")
+    saver.restore(sess, save_file)
+
     # Training cycle
     for epoch in range(n_epochs):
-        total_batch = math.ceil(mnist.train.num_examples / batch_size)
+        total_batch = ceil(mnist.train.num_examples / batch_size)
 
         # Loop over all batches
         for i in range(total_batch):
@@ -71,3 +75,13 @@ with tf.Session() as sess:
     # Save the model
     saver.save(sess, save_file)
     print('Trained Model Saved.')
+
+with tf.Session() as new_sess:
+    saver.restore(new_sess, save_file)
+
+    test_accuracy = new_sess.run(
+        accuracy,
+        feed_dict={ features: mnist.test.images, labels: mnist.test.labels }
+    )
+
+    print('Test Accuracy: {}'.format(test_accuracy))
