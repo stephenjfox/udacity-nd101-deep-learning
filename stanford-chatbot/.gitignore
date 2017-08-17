@@ -1,0 +1,18 @@
+
+# Created by https://www.gitignore.io/api/python
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# End of https://www.gitignore.io/api/python
+
+# ignored project's generated data
+processed/
