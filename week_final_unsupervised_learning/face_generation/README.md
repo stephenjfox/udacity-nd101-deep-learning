@@ -16,6 +16,14 @@ creation of novel images: both handwriting and human-realistic faces
 With [FloydHub](https://www.floydhub.com), initialize the project with the pre-uploaded
 data set provide by Udacity
 
-`floyd run --gpu --env tensorflow --mode jupyter --data floydhub/datasets/udacity-gan/1:/input`
+`floyd run --gpu --env tensorflow --mode jupyter --data R5KrjnANiKVhLWAkpXhNBe:/input`
 
 In a few moments, your project will spin up with access to the correct data
+
+---
+You should be able to use `floydhub/datasets/udacity-gan/1` for the `--data` option,
+but on my last experiment it failed to load.
+
+__If anyone knows a way around this__ please contact me. I'd love to have this resolved
+
+---
